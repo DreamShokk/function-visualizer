@@ -1,0 +1,16 @@
+{
+  "name": "3d-function-visualizer",
+  "version": "1.0.0",
+  "description": "A simple browser-based 3D function visualizer using Three.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^8.3.6"
+  },
+  "dependencies": {
+    "@blazer2k/searxng-suite": "^0.2.3"
+  }
+}
