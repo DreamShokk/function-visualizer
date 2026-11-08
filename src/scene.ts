@@ -1,14 +1,13 @@
 // Scene, camera, renderer and static scene decorations (lights, grid, axes).
 
 import * as THREE from 'three';
+import { defaultCameraPosition } from './camera-controls';
 
 export interface SceneHandles {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
 }
-
-const CAMERA_POSITION = new THREE.Vector3(8, 6, 8);
 
 export function createScene(container: HTMLElement): SceneHandles {
   const scene = new THREE.Scene();
@@ -20,7 +19,8 @@ export function createScene(container: HTMLElement): SceneHandles {
     0.1,
     1000,
   );
-  resetView(camera, scene);
+  camera.position.copy(defaultCameraPosition());
+  camera.lookAt(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -56,9 +56,3 @@ export function createScene(container: HTMLElement): SceneHandles {
   return { scene, camera, renderer };
 }
 
-/** Restore the default camera position and clear any scene rotation. */
-export function resetView(camera: THREE.PerspectiveCamera, scene: THREE.Scene): void {
-  camera.position.copy(CAMERA_POSITION);
-  camera.lookAt(0, 0, 0);
-  scene.rotation.set(0, 0, 0);
-}

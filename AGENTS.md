@@ -29,7 +29,8 @@ function-visualizer/
     ├── evaluator.ts        # Compiles the f(x,y) expression once per edit; NaN on error
     ├── scene.ts            # Scene/camera/renderer setup, lights, grid/axes, resetView()
     ├── surface.ts          # Builds the surface mesh + wireframe overlay from state; disposal
-    ├── camera-controls.ts  # Drag-to-rotate + keyboard shortcuts (R, +/-)
+    ├── camera-controls.ts  # Orbit camera: drag rotate, wheel/+/- zoom, R reset,
+                            # auto-rotate; exposes update()/reset() for the frame loop
     ├── ui.ts               # UI panel bindings: DOM inputs -> state -> onApply callback
     ├── style.css           # All styles (imported by main.ts)
     └── vite-env.d.ts       # Vite client type references (CSS imports etc.)
@@ -40,7 +41,7 @@ function-visualizer/
 ```
 DOM inputs → ui.ts (syncs into AppState) → main.ts applyState()
           → surface.ts buildSurface(state)  → scene.add(group)
-scene/camera/renderer (scene.ts) ← camera-controls.ts (rotation/zoom)
+scene/camera/renderer (scene.ts) ← camera-controls.ts (orbit: drag/wheel/auto-rotate)
 evaluator.ts: expression string → cached fn(x, y), NaN on invalid values
 ```
 
@@ -57,8 +58,10 @@ evaluator.ts: expression string → cached fn(x, y), NaN on invalid values
 - **Three.js comes from npm** (`import * as THREE from 'three'`), never from a CDN.
 - **Dispose GPU resources**: any module that creates geometry/materials must
   expose disposal (see `disposeSurface`) and `main.ts` must call it on teardown.
-- **Expressions are user input.** Keep evaluation isolated in `evaluator.ts`;
-  return NaN for bad values instead of throwing, and never log per-sample errors.
+- **Expressions are user input.** Keep evaluation isolated in `evaluator.ts`.
+  Math functions (`sin`, `sqrt`, …) and constants (`PI`) resolve bare — there is
+  no global `Math.sin`-style fallback; return NaN for bad values instead of
+  throwing, and never log per-sample errors.
 - **Naming**: camelCase functions/variables, PascalCase types/interfaces,
   kebab-case file names.
 - **UI ids** (`function-input`, `domain-x-min`, …) are a contract between

@@ -3,10 +3,10 @@
 import * as THREE from 'three';
 import { defaultState } from './state';
 import type { AppState } from './state';
-import { createScene, resetView } from './scene';
+import { createScene } from './scene';
 import { buildSurface, disposeSurface } from './surface';
 import { bindUI } from './ui';
-import { createCameraControls, createKeyboardControls } from './camera-controls';
+import { createCameraControls } from './camera-controls';
 
 import './style.css';
 
@@ -29,28 +29,23 @@ function applyState(): void {
   scene.add(surface);
 }
 
+const controls = createCameraControls(camera);
+
 const ui = bindUI(state, {
   onApply: applyState,
-  onAutoRotateToggle: () => {}, // state.autoRotate is read by the loop below
-  onResetView: () => resetView(camera, scene),
+  onAutoRotateToggle: (enabled) => controls.setAutoRotate(enabled),
+  onResetView: () => controls.reset(),
 });
 
-const dragControls = createCameraControls(scene);
-const keyControls = createKeyboardControls(camera, scene);
-
-// Animation loop (handles auto-rotate).
-let rotationDirection = 1;
+// Animation loop.
+let lastFrameTime = performance.now();
 
 function animate(): void {
   requestAnimationFrame(animate);
 
-  if (state.autoRotate) {
-    scene.rotation.y += 0.5 * rotationDirection;
-    const limit = Math.PI / 2 + Math.PI;
-    if (scene.rotation.y > limit || scene.rotation.y < -limit) {
-      rotationDirection *= -1;
-    }
-  }
+  const now = performance.now();
+  controls.update(now - lastFrameTime);
+  lastFrameTime = now;
 
   renderer.render(scene, camera);
 }
@@ -63,7 +58,6 @@ console.log('📊 3D Function Visualizer initialized');
 // Cleanup hook (useful if this ever runs in an HMR / hot-reload context).
 window.addEventListener('pagehide', () => {
   ui.dispose();
-  dragControls.dispose();
-  keyControls.dispose();
+  controls.dispose();
   renderer.dispose();
 });
