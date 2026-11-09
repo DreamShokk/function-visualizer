@@ -64,14 +64,29 @@ export function bindUI(state: AppState, options: UIOptions): UIBindings {
   listeners.push([$('color-mode'), 'change', syncFromInputs]);
 
   const autoRotateBtn = $('auto-rotate');
-  const onAutoRotateClick = (e: Event) => {
+  // Label update lives in main.ts (setAutoRotate) so manual-drag stops stay in sync.
+  const onAutoRotateClick = (): void => {
     state.autoRotate = !state.autoRotate;
-    (e.currentTarget as HTMLButtonElement).textContent = state.autoRotate
-      ? '⏸ Auto Rotate'
-      : '▶ Auto Rotate';
     options.onAutoRotateToggle(state.autoRotate);
   };
   listeners.push([autoRotateBtn, 'click', onAutoRotateClick]);
+
+  // Math reference popup: toggled by the "?" button, closed when clicking elsewhere.
+  const helpToggle = $('math-help-toggle');
+  const helpPopup = $('math-help-popup');
+  const onHelpToggleClick = (e: Event): void => {
+    e.stopPropagation();
+    helpPopup.hidden = !helpPopup.hidden;
+  };
+  listeners.push([helpToggle, 'click', onHelpToggleClick]);
+
+  const onDocMouseDown = (e: Event): void => {
+    const target = (e as MouseEvent).target as HTMLElement;
+    if (!target.closest('#math-help-popup') && !target.closest('#math-help-toggle')) {
+      helpPopup.hidden = true;
+    }
+  };
+  listeners.push([document, 'mousedown', onDocMouseDown]);
 
   listeners.push([$('reset-view'), 'click', options.onResetView as EventListener]);
 

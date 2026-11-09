@@ -15,9 +15,9 @@ export interface CameraControls {
 
 const MIN_RADIUS = 3;
 const MAX_RADIUS = 80;
-// Keep the camera above the floor plane (phi measured from +Y).
-const MIN_PHI = 0.15;
-const MAX_PHI = Math.PI / 2 - 0.05;
+// Only avoid the exact poles (phi measured from +Y); looking from below is allowed.
+const MIN_PHI = 0.05;
+const MAX_PHI = Math.PI - 0.05;
 const AUTO_ROTATE_SPEED = 0.4; // radians per second
 
 export const defaultCameraPosition = (): THREE.Vector3 => new THREE.Vector3(8, 6, 8);
@@ -25,9 +25,15 @@ export const defaultCameraPosition = (): THREE.Vector3 => new THREE.Vector3(8, 6
 /** Spherical orbit matching the classic (8, 6, 8) vantage point. */
 const DEFAULT_ORBIT = { radius: Math.sqrt(8 ** 2 + 6 ** 2 + 8 ** 2), theta: Math.PI / 4, phi: 1.09 };
 
+export interface CameraControlOptions {
+  /** Called when the user starts a manual drag (e.g. to cancel auto-rotate). */
+  onUserInteract?: () => void;
+}
+
 export function createCameraControls(
   camera: THREE.PerspectiveCamera,
   uiSelector = '#ui-panel',
+  options: CameraControlOptions = {},
 ): CameraControls {
   const target = new THREE.Vector3(0, 0, 0);
   let radius = DEFAULT_ORBIT.radius;
@@ -52,6 +58,7 @@ export function createCameraControls(
   const onPointerDown = (e: MouseEvent): void => {
     if ((e.target as HTMLElement).closest(uiSelector)) return;
     isDragging = true;
+    options.onUserInteract?.();
     lastX = e.clientX;
     lastY = e.clientY;
   };
@@ -63,7 +70,7 @@ export function createCameraControls(
     const dy = e.clientY - lastY;
 
     theta -= dx * 0.008; // drag right -> orbit left (scene appears to turn right)
-    setPhi(phi - dy * 0.008); // drag down -> raise camera, never below the floor
+    setPhi(phi - dy * 0.008); // drag down -> raise camera
 
     lastX = e.clientX;
     lastY = e.clientY;

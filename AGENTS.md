@@ -29,9 +29,12 @@ function-visualizer/
     ├── evaluator.ts        # Compiles the f(x,y) expression once per edit; NaN on error
     ├── scene.ts            # Scene/camera/renderer setup, lights, grid/axes, resetView()
     ├── surface.ts          # Builds the surface mesh + wireframe overlay from state; disposal
-    ├── camera-controls.ts  # Orbit camera: drag rotate, wheel/+/- zoom, R reset,
-                            # auto-rotate; exposes update()/reset() for the frame loop
-    ├── ui.ts               # UI panel bindings: DOM inputs -> state -> onApply callback
+    ├── camera-controls.ts  # Orbit camera (full phi range, incl. below floor): drag rotate,
+                            # wheel/+/- zoom, R reset, auto-rotate; manual drag fires
+                            # the onUserInteract option so main.ts can cancel auto-rotate;
+                            # exposes update()/reset() for the frame loop
+    ├── ui.ts               # UI panel bindings: DOM inputs -> state -> onApply callback,
+                            # plus the math-reference popup ("?" button next to function input)
     ├── style.css           # All styles (imported by main.ts)
     └── vite-env.d.ts       # Vite client type references (CSS imports etc.)
 ```

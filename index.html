@@ -13,8 +13,22 @@
     <h1>📊 3D Function Visualizer</h1>
 
     <div class="control-group">
-      <label for="function-input">Function f(x, y) = </label>
+      <div class="input-row">
+        <label for="function-input">Function f(x, y) = </label>
+        <button id="math-help-toggle" class="help-btn" title="Available functions & symbols">?</button>
+      </div>
       <input type="text" id="function-input" placeholder="e.g., sin(x)*cos(y)" value="sin(x)*cos(y)" />
+
+      <div id="math-help-popup" hidden>
+        <p class="help-section">Functions</p>
+        <p class="help-list">
+          <code>abs</code><code>acos</code><code>asin</code><code>atan</code><code>cbrt</code><code>ceil</code><code>cos</code><code>exp</code><code>floor</code><code>log</code><code>log2</code><code>log10</code><code>max</code><code>min</code><code>pow</code><code>round</code><code>sign</code><code>sin</code><code>sqrt</code><code>tan</code><code>trunc</code>
+        </p>
+        <p class="help-section">Constants</p>
+        <p class="help-list"><code>PI</code><code>E</code></p>
+        <p class="help-section">Operators</p>
+        <p class="help-list"><code>+ - * / % ** ( )</code></p>
+      </div>
     </div>
 
     <div class="control-group">

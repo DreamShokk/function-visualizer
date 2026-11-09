@@ -29,11 +29,24 @@ function applyState(): void {
   scene.add(surface);
 }
 
-const controls = createCameraControls(camera);
+// Single place that syncs auto-rotate state, the camera and the button label.
+function setAutoRotate(enabled: boolean): void {
+  state.autoRotate = enabled;
+  controls.setAutoRotate(enabled);
+  const btn = document.getElementById('auto-rotate');
+  if (btn) btn.textContent = enabled ? '⏸ Auto Rotate' : '▶ Auto Rotate';
+}
+
+const controls = createCameraControls(camera, '#ui-panel', {
+  // A manual drag cancels auto-rotation.
+  onUserInteract: () => {
+    if (state.autoRotate) setAutoRotate(false);
+  },
+});
 
 const ui = bindUI(state, {
   onApply: applyState,
-  onAutoRotateToggle: (enabled) => controls.setAutoRotate(enabled),
+  onAutoRotateToggle: setAutoRotate,
   onResetView: () => controls.reset(),
 });
 
