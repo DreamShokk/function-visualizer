@@ -69,3 +69,9 @@ evaluator.ts: expression string → cached fn(x, y), NaN on invalid values
 - **CSS lives in `src/style.css`**, imported from `main.ts`. No inline styles or
   `<style>` blocks in `index.html`.
 - `.idea/` and `*.iml` are IDE metadata, not project code — leave them alone.
+
+
+## Other
+
+- When adding a feature or new file, do note it down in AGENTS.md.
+- Try to keep code edits small - the edit tool is atomic, so in the case of a huge edit failing, you have to re-do the whole edit.

@@ -42,7 +42,8 @@ export function buildSurface(state: AppState): THREE.Group {
       if (!isFinite(z)) z = 0;
       row.push(z);
 
-      positions.push(x, SURFACE_BASE_Y + j * stepY, z * zScale);
+      // World Y is the function output; world Z carries the domain's y.
+      positions.push(x, SURFACE_BASE_Y + z * zScale, y);
 
       const color = getColorForZ(z, x, y, state.colorMode);
       colors.push(color.r, color.g, color.b);
@@ -81,15 +82,18 @@ export function buildSurface(state: AppState): THREE.Group {
     for (let i = 0; i <= countX; i++) {
       for (let j = 0; j <= countY; j++) {
         const x = state.xMin + i * stepX;
-        const y = SURFACE_BASE_Y + j * stepY;
+        const y = state.yMin + j * stepY;
 
         if (i > 0) {
-          edges.push(new THREE.Vector3(x - stepX, y, zGrid[i - 1][j] * zScale));
+          edges.push(
+            new THREE.Vector3(x - stepX, SURFACE_BASE_Y + zGrid[i - 1][j] * zScale, y),
+            new THREE.Vector3(x, SURFACE_BASE_Y + zGrid[i][j] * zScale, y),
+          );
         }
         if (j > 0) {
           edges.push(
-            new THREE.Vector3(x, y - stepY, zGrid[i][j - 1] * zScale),
-            new THREE.Vector3(x, y, zGrid[i][j] * zScale),
+            new THREE.Vector3(x, SURFACE_BASE_Y + zGrid[i][j - 1] * zScale, y - stepY),
+            new THREE.Vector3(x, SURFACE_BASE_Y + zGrid[i][j] * zScale, y),
           );
         }
       }
