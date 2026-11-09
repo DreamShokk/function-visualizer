@@ -5,7 +5,7 @@
 export type FunctionOfTwoVariables = (x: number, y: number) => number;
 
 /** Math members made available bare in user expressions (sin(x), PI, ...). */
-const MATH_MEMBERS = [
+export const MATH_MEMBERS = [
   'abs', 'acos', 'asin', 'atan', 'cbrt', 'ceil', 'cos', 'exp', 'floor',
   'log', 'log2', 'log10', 'max', 'min', 'pow', 'round', 'sign', 'sin',
   'sqrt', 'tan', 'trunc',

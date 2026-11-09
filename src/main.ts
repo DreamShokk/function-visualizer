@@ -37,7 +37,8 @@ function setAutoRotate(enabled: boolean): void {
   if (btn) btn.textContent = enabled ? '⏸ Auto Rotate' : '▶ Auto Rotate';
 }
 
-const controls = createCameraControls(camera, '#ui-panel', {
+  // Ignore drags that start on the UI panel or the math help popup.
+  const controls = createCameraControls(camera, '#ui-panel, #math-help-popup', {
   // A manual drag cancels auto-rotation.
   onUserInteract: () => {
     if (state.autoRotate) setAutoRotate(false);

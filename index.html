@@ -18,17 +18,6 @@
         <button id="math-help-toggle" class="help-btn" title="Available functions & symbols">?</button>
       </div>
       <input type="text" id="function-input" placeholder="e.g., sin(x)*cos(y)" value="sin(x)*cos(y)" />
-
-      <div id="math-help-popup" hidden>
-        <p class="help-section">Functions</p>
-        <p class="help-list">
-          <code>abs</code><code>acos</code><code>asin</code><code>atan</code><code>cbrt</code><code>ceil</code><code>cos</code><code>exp</code><code>floor</code><code>log</code><code>log2</code><code>log10</code><code>max</code><code>min</code><code>pow</code><code>round</code><code>sign</code><code>sin</code><code>sqrt</code><code>tan</code><code>trunc</code>
-        </p>
-        <p class="help-section">Constants</p>
-        <p class="help-list"><code>PI</code><code>E</code></p>
-        <p class="help-section">Operators</p>
-        <p class="help-list"><code>+ - * / % ** ( )</code></p>
-      </div>
     </div>
 
     <div class="control-group">
@@ -88,6 +77,21 @@
     <div class="info-panel" id="info-panel">Function: sin(x)*cos(y)</div>
 
     <p class="hint">🖱️ Drag to orbit • Scroll / +/- to zoom • R = reset view</p>
+  </div>
+
+  <!-- Math reference popup: floating panel anchored next to the function input (see ui.ts). -->
+  <div id="math-help-popup" hidden>
+    <p class="help-section">Functions</p>
+    <div class="help-grid" id="math-help-fns"></div>
+
+    <p class="help-section">Constants</p>
+    <div class="help-grid">
+      <button type="button" class="help-item" data-insert="PI">PI</button>
+      <button type="button" class="help-item" data-insert="E">E</button>
+    </div>
+
+    <p class="help-section">Operators</p>
+    <p class="help-list"><code>+ - * / % ** ( )</code></p>
   </div>
 
   <script type="module" src="/src/main.ts"></script>
